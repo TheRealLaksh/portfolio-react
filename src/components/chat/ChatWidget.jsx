@@ -82,13 +82,12 @@ function ChatWidget() {
           lineIndex++;
         } else {
           clearInterval(interval);
-          // Small delay before showing actual chat
           setTimeout(() => {
             setIsBooting(false);
             setHasBooted(true);
           }, 800);
         }
-      }, 400); // Time between lines
+      }, 400);
 
       return () => clearInterval(interval);
     }
@@ -169,7 +168,7 @@ function ChatWidget() {
         <div className="mb-4 w-[340px] max-w-[90vw] rounded-2xl bg-[#0a0a0b]/95 text-slate-200 shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)] border border-white/10 backdrop-blur-xl p-4 flex flex-col animate-in slide-in-from-bottom-5 fade-in duration-300 overflow-hidden min-h-[400px]">
           
           {isBooting ? (
-            // --- BOOT SEQUENCE INTERFACE (No Logo here) ---
+            // --- BOOT SEQUENCE INTERFACE ---
             <div className="flex-1 flex flex-col justify-center items-start h-full font-mono text-[11px] leading-6 p-4 text-sky-400 tracking-wide select-none">
               {bootLines.map((line, index) => (
                 <div key={index} className="animate-in fade-in slide-in-from-left-2 duration-300">
@@ -199,25 +198,37 @@ function ChatWidget() {
                 </button>
               </div>
 
-              <div className="flex-1 min-h-[250px] max-h-[350px] overflow-y-auto space-y-3 pr-1 mb-3 custom-scrollbar animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100" onWheel={handleInnerWheel}>
-                {/* EMPTY STATE - LOGO REMOVED */}
+              <div className="flex-1 min-h-[250px] max-h-[350px] overflow-y-auto space-y-4 pr-1 mb-3 custom-scrollbar animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100" onWheel={handleInnerWheel}>
                 {chatMessages.length === 0 && (
                   <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                    {/* Icon removed from here */}
-                    <p className="text-xs text-slate-400">Ask me anything!</p>
+                    <p className="text-xs text-slate-500 font-mono tracking-wide">
+                      {'>'} AWAITING INPUT_
+                    </p>
                   </div>
                 )}
                 
-                {/* Messages */}
+                {/* --- TERMINAL STYLE BUBBLES --- */}
                 {chatMessages.map((message, index) => (
                   <div key={index} className={`flex ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-sm ${message.sender === 'You' ? 'bg-sky-600 text-white rounded-br-sm' : 'bg-slate-800/80 text-slate-200 border border-white/5 rounded-bl-sm'}`}>
+                    <div 
+                      className={`max-w-[90%] rounded-md px-3 py-2 text-[12px] font-mono border-l-2 shadow-sm ${
+                        message.sender === 'You' 
+                          ? 'border-sky-500 bg-sky-900/10 text-sky-300' // User: Hacker Blue/Green vibe
+                          : 'border-slate-600 bg-[#050505] text-slate-400' // AI: Dark terminal output
+                      }`}
+                    >
+                      <span className="opacity-40 text-[9px] uppercase tracking-wider block mb-1 select-none">
+                        {message.sender === 'You' ? '> USER_INPUT' : '> SYSTEM_RESPONSE'}
+                      </span>
+                      
                       {message.type === 'loading' ? (
-                        <span className="animate-pulse">...</span>
+                        <span className="animate-pulse">_</span>
                       ) : message.type === 'mdx' ? (
-                        <div className="prose prose-invert prose-p:my-1 text-[13px]"><ReactMarkdown>{String(message.content)}</ReactMarkdown></div>
+                        <div className="prose prose-invert prose-p:my-1 text-[12px] leading-relaxed">
+                          <ReactMarkdown>{String(message.content)}</ReactMarkdown>
+                        </div>
                       ) : (
-                        message.content
+                        <div className="whitespace-pre-wrap">{message.content}</div>
                       )}
                     </div>
                   </div>
@@ -227,8 +238,8 @@ function ChatWidget() {
               <div className="relative animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
                 <input
                   type="text"
-                  className="w-full rounded-full border border-white/10 bg-black/40 pl-4 pr-12 py-3 text-[13px] text-white outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/50 transition-all placeholder:text-slate-600"
-                  placeholder="Type a message..."
+                  className="w-full rounded-full border border-white/10 bg-black/40 pl-4 pr-12 py-3 text-[13px] text-white outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/50 transition-all placeholder:text-slate-600 font-mono"
+                  placeholder="> Enter command..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
