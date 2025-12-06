@@ -9,17 +9,20 @@ const Contact = () => {
   const containerRef = useRef(null);
 
   // --- HOLOGRAPHIC SCROLL EFFECT ---
+  // We track when the form enters the viewport
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "center center"]
   });
 
-  // Scale up slightly as it comes into view
+  // 1. Scale: Pops slightly into view (0.95 -> 1.0)
   const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
-  // Border opacity becomes solid
+  
+  // 2. Border: Goes from faint (0.1) to solid (0.6)
   const borderOpacity = useTransform(scrollYProgress, [0, 1], [0.1, 0.6]);
-  // Background glow intensity
-  const bgGlow = useTransform(scrollYProgress, [0, 1], ["rgba(14, 165, 233, 0)", "rgba(14, 165, 233, 0.15)"]);
+  
+  // 3. Glow: Background fills with a very faint blue light
+  const bgGlow = useTransform(scrollYProgress, [0, 1], ["rgba(14, 165, 233, 0)", "rgba(14, 165, 233, 0.05)"]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +64,7 @@ const Contact = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
 
-          {/* Left Column - Contact Info (Keep Standard Reveal) */}
+          {/* Left Column - Keep standard animation */}
           <div className="lg:col-span-2 space-y-6">
             <Reveal delay={0.1}>
                <div className="bg-slate-900/50 backdrop-blur-md border border-slate-800 p-8 rounded-2xl shadow-lg">
@@ -71,21 +74,15 @@ const Contact = () => {
                     Let's discuss how we can craft it into reality.
                   </p>
                   <div className="space-y-4">
-                     {/* Email */}
                      <div className="flex items-center gap-4 text-slate-300">
-                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-sky-400 shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        </div>
+                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-sky-400 shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div>
                         <div>
                            <div className="text-xs text-slate-500 uppercase tracking-wider font-bold">Email</div>
                            <a href="mailto:contact@lakshp.live" className="hover:text-sky-400 transition-colors">contact@lakshp.live</a>
                         </div>
                      </div>
-                     {/* Location */}
                      <div className="flex items-center gap-4 text-slate-300">
-                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-purple-400 shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        </div>
+                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-purple-400 shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
                         <div>
                            <div className="text-xs text-slate-500 uppercase tracking-wider font-bold">Location</div>
                            <span>Varanasi, India</span>
@@ -95,19 +92,18 @@ const Contact = () => {
                </div>
             </Reveal>
             
-            {/* Social Connect (Keep existing) */}
-            {/* ... (Social icons code remains same as your original, just wrapped in Reveal) ... */}
+            {/* Social Icons - (You can paste your existing Social Icons block here if needed) */}
           </div>
 
-          {/* Right Column: Holographic Form */}
+          {/* Right Column: The Holographic Form */}
           <div className="lg:col-span-3">
             <motion.div 
                 style={{ 
                     scale, 
                     backgroundColor: bgGlow,
-                    borderColor: `rgba(255, 255, 255, ${borderOpacity})`
+                    borderColor: `rgba(255, 255, 255, ${borderOpacity})` // Dynamic border opacity
                 }}
-                className="backdrop-blur-md border border-slate-800/50 p-8 rounded-2xl shadow-xl relative group overflow-hidden h-full transition-colors duration-500"
+                className="backdrop-blur-md border border-slate-800 p-8 rounded-2xl shadow-xl relative group overflow-hidden h-full transition-colors duration-500"
             >
                 <form onSubmit={handleSubmit}>
                     {/* Animated Glow Spot inside form */}
