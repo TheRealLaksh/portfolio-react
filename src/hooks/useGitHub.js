@@ -24,7 +24,6 @@ const useGitHub = () => {
           axios.get(`https://api.github.com/repos/${GITHUB_USERNAME}/${name}`)
         );
 
-        // Use allSettled so one failure doesn't break the whole section
         const results = await Promise.allSettled(repoRequests);
         
         const validData = results
@@ -49,6 +48,7 @@ const useGitHub = () => {
               demo: repo.homepage,
               stars: repo.stargazers_count,
               language: repo.language,
+              topics: repo.topics || [], // Fetch topics/tags
               genre: genre
             };
           });
