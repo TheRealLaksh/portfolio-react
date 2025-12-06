@@ -4,6 +4,8 @@ import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Experience from './components/sections/Experience';
 import Skills from './components/sections/Skills';
+import Projects from './components/sections/Projects';
+import Resume from './components/sections/Resume';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -23,9 +25,10 @@ function App() {
       <About />
       <Experience />
       <Skills />
+      <Projects />
+      <Resume />
       
-      {/* Temp spacer for scrolling until next phase */}
-      <div className="h-[200px]" />
+      <div className="h-[200px]" /> {/* Spacer */}
     </Layout>
   );
 }
