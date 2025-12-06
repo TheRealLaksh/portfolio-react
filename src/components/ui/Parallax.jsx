@@ -12,7 +12,10 @@ export const Parallax = ({ children, speed = 0.5, className = "" }) => {
 
   return (
     <div ref={ref} className={className}>
-      <motion.div style={{ y }}>{children}</motion.div>
+      {/* ADDED 'h-full w-full' CLASS HERE */}
+      <motion.div style={{ y }} className="h-full w-full">
+        {children}
+      </motion.div>
     </div>
   );
 };
