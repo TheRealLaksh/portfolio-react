@@ -3,11 +3,11 @@ import axios from 'axios';
 
 const GITHUB_USERNAME = 'TheRealLaksh';
 const REPO_NAMES = [
-  'Portfolio-Website',
+  'portfolio-react',
   'stranger-things',
   'Music-Player',
   'Callender-Events',
-  'artist-portfolio',
+  'Portfolio-Website ',
   'Shopping-demo'
 ];
 
