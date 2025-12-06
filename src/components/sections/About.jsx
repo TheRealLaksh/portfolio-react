@@ -1,47 +1,170 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Tilt from 'react-parallax-tilt';
+import { motion } from 'framer-motion';
+import { FiCode, FiMapPin, FiCpu, FiGlobe, FiTerminal } from 'react-icons/fi';
 import profileImg from '../../assets/images/laksh.pradhwani.webp';
-import { TextReveal } from '../ui/TextReveal'; 
-import { Parallax } from '../ui/Parallax';    
+import { TextReveal } from '../ui/TextReveal';
+import { Parallax } from '../ui/Parallax';
+
+// --- SUB-COMPONENT: TERMINAL BIO ---
+const TerminalBio = () => {
+  const [text, setText] = useState('');
+  const fullText = `const laksh = {
+  role: "Full Stack Developer",
+  passion: "Building Digital Universes",
+  arsenal: ["React", "Django", "AI/ML"],
+  mission: "To engineer the future."
+};`;
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      setText(fullText.slice(0, index));
+      index++;
+      if (index > fullText.length) clearInterval(interval);
+    }, 30); // Typing speed
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="w-full rounded-xl bg-[#1e1e1e] border border-slate-700 shadow-2xl overflow-hidden group hover:border-slate-500 transition-colors duration-300">
+      {/* Terminal Header */}
+      <div className="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-slate-700">
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+          <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+          <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+        </div>
+        <div className="flex-1 text-center text-[10px] font-mono text-slate-400 opacity-60">
+          laksh_bio.js — bash
+        </div>
+      </div>
+      
+      {/* Code Body */}
+      <div className="p-6 font-mono text-sm sm:text-base leading-relaxed overflow-x-auto">
+        <pre className="text-slate-300 whitespace-pre-wrap">
+          <span className="text-pink-400">const</span> <span className="text-sky-400">Laksh</span> <span className="text-white">=</span> <span className="text-yellow-300">{'{'}</span>
+          <br />
+          {text}
+          <span className="animate-pulse w-2 h-4 bg-sky-400 inline-block align-middle ml-1"></span>
+          <br />
+          <span className="text-yellow-300">{'}'}</span>;
+        </pre>
+      </div>
+    </div>
+  );
+};
+
+// --- SUB-COMPONENT: LOCATION RADAR ---
+const LocationRadar = () => {
+  return (
+    <div className="relative group cursor-crosshair">
+      <div className="relative w-32 h-32 flex items-center justify-center">
+        {/* Outer Ring */}
+        <div className="absolute inset-0 border border-emerald-500/30 rounded-full animate-[spin_4s_linear_infinite]"></div>
+        <div className="absolute inset-2 border border-emerald-500/10 rounded-full border-dashed animate-[spin_10s_linear_infinite_reverse]"></div>
+        
+        {/* Scanning Sweep */}
+        <div className="absolute w-full h-full rounded-full animate-[spin_2s_linear_infinite]"
+             style={{ background: 'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(16, 185, 129, 0.2) 360deg)' }}>
+        </div>
+
+        {/* Central Blip */}
+        <div className="w-3 h-3 bg-emerald-400 rounded-full shadow-[0_0_10px_#34d399] animate-pulse relative z-10"></div>
+        
+        {/* Tooltip Overlay */}
+        <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs text-emerald-400 border border-emerald-500/30 shadow-xl">
+           <FiMapPin className="inline mr-1" /> Varanasi, India
+           <div className="text-[9px] text-slate-500 font-mono mt-0.5">LAT: 25.3176° N | LNG: 82.9739° E</div>
+        </div>
+      </div>
+      <p className="text-center text-[10px] font-mono text-emerald-500/60 mt-2 tracking-widest">SYSTEM ONLINE</p>
+    </div>
+  );
+};
 
 const About = () => {
   return (
-    <section id="about" className="my-16 sm:my-24 scroll-mt-20 relative z-10">
-      <div className="w-full px-6 md:px-12 relative z-10">
+    <section id="about" className="my-20 sm:my-32 relative z-10 overflow-hidden">
+      
+      {/* 9. PARALLAX FLOATING ELEMENTS */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+         <Parallax speed={-0.2} className="absolute top-[10%] left-[5%] text-slate-800/50 text-6xl font-bold font-mono opacity-20">01</Parallax>
+         <Parallax speed={0.1} className="absolute top-[20%] right-[10%] text-sky-900/20 text-8xl font-black opacity-10">{'}'}</Parallax>
+         <Parallax speed={-0.1} className="absolute bottom-[10%] left-[15%] text-purple-900/20 text-9xl font-black opacity-10">{'</>'}</Parallax>
+         <Parallax speed={0.3} className="absolute top-[40%] right-[5%] w-32 h-32 border border-slate-800/30 rounded-full"></Parallax>
+      </div>
 
-        {/* Header with Reveal */}
-        <TextReveal className="mb-16 text-center flex justify-center">
-          <h2 className="section-title text-3xl font-bold text-white relative inline-block">
-            About Me
+      <div className="w-full px-6 md:px-12 relative z-10 max-w-[1600px] mx-auto">
+
+        <TextReveal className="mb-20 text-center flex justify-center">
+          <h2 className="section-title text-4xl md:text-5xl font-bold text-white relative inline-block">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-purple-500">
+              User Profile
+            </span>
           </h2>
         </TextReveal>
 
-        <div className="flex flex-col lg:flex-row items-stretch justify-center gap-12 max-w-[1600px] mx-auto">
+        <div className="flex flex-col xl:flex-row items-center gap-16">
 
-          {/* Left: Image with Parallax */}
-          {/* FIXED: Added 'lg:min-h-[500px]' so the absolute image has space to render */}
-          <Parallax speed={-0.05} className="relative w-full lg:w-1/2 h-[400px] sm:h-[500px] lg:min-h-[500px] rounded-2xl overflow-hidden shadow-2xl group order-1">
-            <img 
-              src={profileImg} 
-              alt="Laksh Pradhwani - Web Developer"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-            />
+          {/* LEFT: 1. HOLOGRAPHIC PROFILE CARD */}
+          <div className="w-full xl:w-5/12 flex flex-col items-center">
+            <Tilt 
+                tiltMaxAngleX={15} 
+                tiltMaxAngleY={15} 
+                perspective={1000} 
+                scale={1.05}
+                className="relative w-full max-w-[400px] aspect-[4/5] rounded-2xl overflow-hidden group"
+            >
+                {/* Image */}
+                <img 
+                  src={profileImg} 
+                  alt="Laksh Pradhwani"
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 brightness-75 group-hover:brightness-100"
+                />
 
-            <div className="absolute bottom-5 left-5 z-10">
-              <div className="flex items-center gap-3 bg-slate-900/50 backdrop-blur-md px-5 py-3 rounded-xl border border-white/10 shadow-lg">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                </span>
-                <span className="text-sm font-medium text-white">Available for projects</span>
-              </div>
-            </div>
-          </Parallax>
+                {/* Holographic Overlay Effects */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none mix-blend-overlay"></div>
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-200"></div>
+                
+                {/* Scanner Line */}
+                <motion.div 
+                    className="absolute top-0 left-0 w-full h-[2px] bg-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.8)] z-20 opacity-0 group-hover:opacity-100"
+                    animate={{ top: ['0%', '100%', '0%'] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                />
 
-          {/* Right: Content */}
-          <div className="w-full lg:w-1/2 flex flex-col order-2">
-            <div className="relative p-6 sm:p-10 rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-md shadow-xl h-full flex flex-col justify-center">
+                {/* ID Badge Details (Bottom) */}
+                <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                   <div className="flex justify-between items-end border-b border-white/20 pb-4 mb-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-white tracking-wide">LAKSH.P</h3>
+                        <p className="text-sky-400 text-xs font-mono tracking-widest mt-1">LVL. 18 DEV</p>
+                      </div>
+                      <FiCpu className="text-slate-400 text-2xl animate-pulse" />
+                   </div>
+                   <div className="grid grid-cols-2 gap-4 text-[10px] font-mono text-slate-400">
+                      <div>
+                         <span className="block text-slate-600">CLASS</span>
+                         ENGINEER
+                      </div>
+                      <div className="text-right">
+                         <span className="block text-slate-600">STATUS</span>
+                         <span className="text-green-400">ONLINE</span>
+                      </div>
+                   </div>
+                </div>
+            </Tilt>
+          </div>
 
-              <div className="text-slate-300 text-lg leading-relaxed space-y-6">
+          {/* RIGHT: CONTENT & WIDGETS */}
+          <div className="w-full xl:w-7/12 flex flex-col gap-10">
+            
+            {/* 3. TERMINAL BIOGRAPHY */}
+            <TerminalBio />
+
+            {/* Standard Text Description - RESTORED ORIGINAL CONTENT */}
+            <div className="text-slate-300 text-lg leading-relaxed space-y-6 font-light">
                 <TextReveal>
                   <p>
                     I’m an aspiring <strong className="text-sky-400">AI/ML Engineer</strong> and high
@@ -72,43 +195,77 @@ const About = () => {
                     push me further.
                   </p>
                 </TextReveal>
-              </div>
+            </div>
 
-              {/* Info Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10 pt-8 border-t border-slate-700">
-                <TextReveal>
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">Name</div>
-                    <div className="font-semibold text-white text-lg">Laksh Pradhwani</div>
-                  </div>
-                </TextReveal>
-                <TextReveal>
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">Email</div>
-                    <a href="mailto:contact@lakshp.live" className="text-sky-400 font-semibold hover:text-sky-300 break-all">
-                      contact@lakshp.live
-                    </a>
-                  </div>
-                </TextReveal>
-                <TextReveal>
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">Location</div>
-                    <div className="font-semibold text-white text-lg">Varanasi, India</div>
-                  </div>
-                </TextReveal>
-                <TextReveal>
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">Availability</div>
-                    <div className="font-semibold text-green-400 text-lg">Open to opportunities</div>
-                  </div>
-                </TextReveal>
-              </div>
+            {/* 10. LOCATION RADAR & STATS GRID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                
+                {/* Radar Card */}
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 flex flex-col items-center justify-center backdrop-blur-sm">
+                   <LocationRadar />
+                </div>
+
+                {/* System Stats Card */}
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 backdrop-blur-sm flex flex-col justify-center gap-4 font-mono text-xs">
+                   <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                      <span className="text-slate-500">SYSTEM CHECK</span>
+                      <span className="text-green-400">ALL SYSTEMS GO</span>
+                   </div>
+                   
+                   <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-slate-400">LOGIC</span>
+                          <span className="text-sky-400">98%</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                           <motion.div 
+                             initial={{ width: 0 }} 
+                             whileInView={{ width: '98%' }} 
+                             transition={{ duration: 1.5, delay: 0.2 }}
+                             className="h-full bg-sky-500" 
+                           />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-slate-400">CREATIVITY</span>
+                          <span className="text-purple-400">94%</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                           <motion.div 
+                             initial={{ width: 0 }} 
+                             whileInView={{ width: '94%' }} 
+                             transition={{ duration: 1.5, delay: 0.4 }}
+                             className="h-full bg-purple-500" 
+                           />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-slate-400">CAFFEINE</span>
+                          <span className="text-red-400 animate-pulse">110%</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                           <motion.div 
+                             initial={{ width: 0 }} 
+                             whileInView={{ width: '100%' }} 
+                             transition={{ duration: 1.5, delay: 0.6 }}
+                             className="h-full bg-red-500" 
+                           />
+                        </div>
+                      </div>
+                   </div>
+
+                </div>
 
             </div>
+
           </div>
 
         </div>
-
       </div>
     </section>
   );
