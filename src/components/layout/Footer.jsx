@@ -1,18 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 import useSpotify from '../../hooks/useSpotify';
 
 const Footer = () => {
   const { song } = useSpotify();
   const [time, setTime] = useState(new Date());
+  
+  // Refs for animation control
+  const maskRef = useRef(null);
+  const containerRef = useRef(null);
+  const isHovered = useRef(false);
+  const animationRef = useRef(null);
 
-  // Update time every minute
+  // 1. Clock Logic
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
 
-  // Format Time (IST)
+  // 2. Animation Loop (The "Brain" of the spotlight)
+  useEffect(() => {
+    const animate = () => {
+      if (!maskRef.current) return;
+
+      if (!isHovered.current) {
+        // --- IDLE STATE: Scan Left to Right ---
+        const now = Date.now();
+        // Complete one sweep every 3 seconds
+        const progress = (now % 3000) / 3000; 
+        
+        // Map progress (0 to 1) to SVG coordinates (0 to 300 width)
+        const x = progress * 300; 
+        
+        maskRef.current.setAttribute('cx', x);
+        maskRef.current.setAttribute('cy', '50'); // Keep centered vertically
+      }
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    // Start loop
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, []);
+
+  // 3. Interactive Logic (Mouse Follower)
+  const handleMouseMove = (e) => {
+    if (!containerRef.current || !maskRef.current) return;
+    
+    isHovered.current = true; // Pause auto-scan
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const relX = e.clientX - rect.left;
+    const relY = e.clientY - rect.top;
+
+    // Map DOM mouse coordinates to SVG ViewBox coordinates (300x100)
+    const svgX = (relX / rect.width) * 300;
+    const svgY = (relY / rect.height) * 100;
+
+    maskRef.current.setAttribute('cx', svgX);
+    maskRef.current.setAttribute('cy', svgY);
+  };
+
+  const handleMouseLeave = () => {
+    isHovered.current = false; // Resume auto-scan
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const formatTime = (date) => {
     return date.toLocaleTimeString('en-US', {
       hour: 'numeric',
@@ -22,24 +82,20 @@ const Footer = () => {
     });
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <footer className="relative w-full bg-[#020203] border-t border-white/5 overflow-hidden pt-14 pb-28 md:pb-14">
       
-      {/* Radial Gradient Overlay */}
+      {/* Background Overlay */}
       <div className="absolute inset-0 z-0 pointer-events-none"
            style={{ background: "radial-gradient(125% 125% at 50% 10%, rgba(0, 0, 0, 0) 40%, rgba(60, 162, 250, 0.1) 100%)" }}>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 flex flex-col items-center">
         
-        {/* Top Grid */}
+        {/* Top Grid Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full mb-12 text-center md:text-left">
           
-          {/* Brand Column */}
+          {/* 1. Brand Info */}
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold text-white">Laksh Pradhwani</h2>
             <p className="text-sm text-slate-400 leading-relaxed">
@@ -54,7 +110,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Links Column */}
+          {/* 2. Links */}
           <div>
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-3 text-sm text-slate-400">
@@ -68,7 +124,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Connect & Widgets Column */}
+          {/* 3. Connect & Spotify */}
           <div className="flex flex-col items-center md:items-start">
             <h3 className="text-white font-semibold mb-4">Connect</h3>
 
@@ -92,7 +148,6 @@ const Footer = () => {
               >
                 <div className="relative w-8 h-8 shrink-0">
                   <img src={song.image} alt="Album Art" className="w-full h-full rounded-full object-cover border border-white/10 animate-spin-slow" />
-                  {/* Equalizer Bars */}
                   <div className="absolute inset-0 flex items-center justify-center gap-0.5 bg-black/30 rounded-full backdrop-blur-[1px]">
                     <div className="w-0.5 bg-green-400 h-2 animate-pulse"></div>
                     <div className="w-0.5 bg-green-400 h-3 animate-pulse delay-75"></div>
@@ -120,13 +175,18 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Big Interactive Text */}
+        {/* --- INTERACTIVE TEXT (Auto-Scan + Mouse Follow) --- */}
         <div 
-          className="w-full h-32 sm:h-48 md:h-64 relative cursor-pointer select-none flex items-center justify-center mb-8 group"
+          id="footer-hover-container"
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
           onClick={scrollToTop}
+          className="w-full h-32 sm:h-48 md:h-64 relative cursor-pointer select-none flex items-center justify-center mb-8 group"
         >
-          <svg className="w-full h-full" viewBox="0 0 1320 300" preserveAspectRatio="xMidYMid meet">
+          <svg className="w-full h-full" viewBox="0 0 300 100" preserveAspectRatio="xMidYMid meet">
             <defs>
+              {/* Rainbow Gradient for the Text */}
               <linearGradient id="textGradient" gradientUnits="userSpaceOnUse" cx="50%" cy="50%" r="25%">
                 <stop offset="0%" stopColor="#eab308" />
                 <stop offset="25%" stopColor="#ef4444" />
@@ -134,21 +194,37 @@ const Footer = () => {
                 <stop offset="75%" stopColor="#06b6d4" />
                 <stop offset="100%" stopColor="#8b5cf6" />
               </linearGradient>
-              <radialGradient id="revealMask" gradientUnits="userSpaceOnUse" r="20%" cx="50%" cy="50%">
+
+              {/* The Spotlight Mask */}
+              <radialGradient 
+                id="revealMask" 
+                gradientUnits="userSpaceOnUse" 
+                r="25%" // Spotlight Size
+                cx="0" // Initially 0, updated by JS
+                cy="50" 
+                ref={maskRef}
+              >
                 <stop offset="0%" stopColor="white" />
                 <stop offset="100%" stopColor="black" />
               </radialGradient>
+
               <mask id="textMask">
                 <rect x="0" y="0" width="100%" height="100%" fill="url(#revealMask)" />
               </mask>
             </defs>
+
+            {/* Layer 1: Faint Outline (Always Visible) */}
             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" strokeWidth="0.3"
-              className="font-sans font-bold fill-transparent stroke-neutral-800 text-[220px] opacity-50">LAKSH</text>
+              className="font-[helvetica] font-bold fill-transparent stroke-neutral-800 text-7xl opacity-50">
+              LAKSH
+            </text>
+            
+            {/* Layer 2: Revealed Gradient Text (Masked) */}
             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" strokeWidth="0.3"
-              className="font-sans font-bold fill-transparent stroke-sky-500 text-[220px] opacity-0 group-hover:opacity-100 transition-opacity duration-500">LAKSH</text>
-            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" strokeWidth="0.3"
-              className="font-sans font-bold fill-transparent stroke-[url(#textGradient)] text-[220px]"
-              mask="url(#textMask)">LAKSH</text>
+              className="font-[helvetica] font-bold fill-transparent stroke-[url(#textGradient)] text-7xl"
+              mask="url(#textMask)">
+              LAKSH
+            </text>
           </svg>
         </div>
 
@@ -156,7 +232,6 @@ const Footer = () => {
         <div className="border-t border-white/5 w-full pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
           <p>© {new Date().getFullYear()} Laksh Pradhwani. All Rights Reserved.</p>
 
-          {/* Tech Stack Badge */}
           <div className="flex items-center gap-2 bg-[#0a0a0b] px-3 py-1.5 rounded-full border border-white/10 shadow-inner shadow-white/5">
             <span>Built with</span>
             <span className="text-sky-400 font-medium">React</span>
