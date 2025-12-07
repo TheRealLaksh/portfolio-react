@@ -10,7 +10,7 @@ import { triggerHaptic } from '../../utils/triggerHaptic';
 import { cn } from '../../utils/cn';
 
 // API Configuration
-const API_URL = 'http://ai-backend.lakshp.live/api/chat';
+const API_URL = 'https://ai-backend.lakshp.live/api/chat';
 const API_KEY = 'oqLZh!P`U61f,m4iV?l556.N&O`A%%h';
 
 // --- COMPONENTS ---
