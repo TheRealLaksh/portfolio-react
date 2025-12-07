@@ -78,7 +78,7 @@ const Navbar = () => {
   };
 
   const getLinkClass = (id) => cn(
-    "relative flex items-center justify-center rounded-full md:rounded-xl px-3 py-2 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 group hover:bg-white/5",
+    "relative flex items-center justify-center rounded-full md:rounded-xl px-3 py-2 md:px-4 md:py-3 text-sm md:text-base font-medium transition-all duration-300 shrink-0 group hover:bg-white/5",
     activeSection === id 
       ? "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.15)] scale-110 md:scale-100" 
       : "text-slate-400 hover:text-slate-200 active:scale-95"
@@ -93,46 +93,46 @@ const Navbar = () => {
 
   return (
     <nav className={cn(
-      "fixed left-1/2 -translate-x-1/2 z-50 flex flex-nowrap items-center gap-1 md:gap-1 rounded-full md:rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl p-1 md:p-2 shadow-2xl shadow-black/80 transition-all duration-500 max-w-[95vw] overflow-x-auto no-scrollbar",
+      "fixed left-1/2 -translate-x-1/2 z-50 flex flex-nowrap items-center gap-1 md:gap-2 rounded-full md:rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl p-1 md:p-3 shadow-2xl shadow-black/80 transition-all duration-500 max-w-[95vw] overflow-x-auto no-scrollbar",
       "bottom-4 pb-safe",
       "md:bottom-auto md:top-6",
       !isVisible && "translate-y-[200%] opacity-0 md:translate-y-0 md:opacity-100"
     )}>
       
       <a href="#home" onClick={(e) => scrollToSection(e, 'home')} className={getLinkClass('home')}>
-        <FiHome className="w-4 h-4 md:w-4 md:h-4" />
+        <FiHome className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('home')}>Home</span>
       </a>
 
       <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className={getLinkClass('about')}>
-        <FiUser className="w-4 h-4 md:w-4 md:h-4" />
+        <FiUser className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('about')}>About</span>
       </a>
 
       <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className={getLinkClass('experience')}>
-        <FiBriefcase className="w-4 h-4 md:w-4 md:h-4" />
+        <FiBriefcase className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('experience')}>Work</span>
       </a>
 
       <a href="#skills" onClick={(e) => scrollToSection(e, 'skills')} className={getLinkClass('skills')}>
-        <FiCpu className="w-4 h-4 md:w-4 md:h-4" />
+        <FiCpu className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('skills')}>Skills</span>
       </a>
 
       <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className={getLinkClass('projects')}>
-        <FiCode className="w-4 h-4 md:w-4 md:h-4" />
+        <FiCode className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('projects')}>Projects</span>
       </a>
 
       <div className="mx-1 h-6 w-[1px] bg-white/10 shrink-0 hidden md:block"></div>
 
       <a href="#resume" onClick={(e) => scrollToSection(e, 'resume')} className={getLinkClass('resume')}>
-        <FiFileText className="w-4 h-4 md:w-4 md:h-4" />
+        <FiFileText className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('resume')}>Resume</span>
       </a>
 
       <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className={getLinkClass('contact')}>
-        <FiMail className="w-4 h-4 md:w-4 md:h-4" />
+        <FiMail className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('contact')}>Contact</span>
       </a>
 
