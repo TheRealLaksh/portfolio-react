@@ -1,103 +1,141 @@
 import React, { useEffect, useState } from 'react';
-import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail } from 'react-icons/fi';
+import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail, FiDownload } from 'react-icons/fi'; // Added FiDownload
 import useScrollSpy from '../../hooks/useScrollSpy';
 import { cn } from '../../utils/cn';
 import { triggerWarp } from '../../utils/triggerWarp';
+import { triggerHaptic } from '../../utils/triggerHaptic';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
   
-  // Define the IDs to track
   const navIds = ['home', 'about', 'experience', 'skills', 'projects', 'resume', 'contact'];
   const activeSection = useScrollSpy(navIds);
 
-  // Handle scroll appearance (optional, adds extra blur on scroll)
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Auto-hide logic for mobile dock
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false); // Scrolling down
+      } else {
+        setIsVisible(true); // Scrolling up
+      }
+      
+      setLastScrollY(currentScrollY);
+      setIsScrolled(currentScrollY > 50);
+    };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
+  // PWA Install Prompt Listener
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
+
+  const handleInstallClick = () => {
+    triggerHaptic();
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          setDeferredPrompt(null);
+        }
+      });
+    }
+  };
 
   const scrollToSection = (e, id) => {
     e.preventDefault();
-    triggerWarp(); // Trigger the 3D Warp Effect
-    
+    triggerHaptic();
+    triggerWarp();
     const element = document.getElementById(id);
     if (element) {
       setTimeout(() => {
         element.scrollIntoView({ behavior: 'smooth' });
-      }, 100); // Slight delay to allow warp to start visually
+      }, 100);
     }
   };
 
-  // Helper for the link classes to keep JSX clean
   const getLinkClass = (id) => cn(
-    "relative flex items-center rounded-full md:rounded-xl px-3 py-2.5 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 group hover:bg-white/5",
+    "relative flex items-center rounded-full md:rounded-xl px-4 py-3 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 group hover:bg-white/5",
     activeSection === id 
-      ? "bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.1)]" 
-      : "text-slate-400 hover:text-slate-200"
+      ? "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.15)] scale-110 md:scale-100" 
+      : "text-slate-400 hover:text-slate-200 active:scale-95"
   );
 
   const getTextClass = (id) => cn(
-    "overflow-hidden transition-all duration-300 ease-in-out",
+    "overflow-hidden transition-all duration-300 ease-in-out hidden md:block", // Hide text on mobile
     activeSection === id 
       ? "w-auto opacity-100 ml-2" 
       : "w-0 opacity-0 group-hover:w-auto group-hover:opacity-100 group-hover:ml-2"
   );
 
   return (
-    <nav className="fixed bottom-6 md:bottom-auto md:top-6 left-1/2 -translate-x-1/2 z-50 
-      flex flex-nowrap items-center gap-1 
-      rounded-full md:rounded-2xl 
-      border border-white/10 bg-black/20 backdrop-blur-xl 
-      p-2 shadow-2xl shadow-black/50 
-      transition-all duration-300 
-      max-w-[95vw] overflow-x-auto no-scrollbar"
-    >
+    <nav className={cn(
+      "fixed left-1/2 -translate-x-1/2 z-50 flex flex-nowrap items-center gap-2 md:gap-1 rounded-full md:rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl p-2 md:p-2 shadow-2xl shadow-black/80 transition-all duration-500 max-w-[90vw] overflow-x-auto no-scrollbar",
+      // Mobile Positioning (Bottom Dock)
+      "bottom-6 pb-safe", 
+      // Desktop Positioning (Top Bar)
+      "md:bottom-auto md:top-6",
+      // Auto-Hide Animation (Mobile Only)
+      !isVisible && "translate-y-[200%] opacity-0 md:translate-y-0 md:opacity-100"
+    )}>
       
-      {/* --- Home --- */}
       <a href="#home" onClick={(e) => scrollToSection(e, 'home')} className={getLinkClass('home')}>
-        <FiHome className="w-5 h-5" />
+        <FiHome className="w-5 h-5 md:w-4 md:h-4" />
         <span className={getTextClass('home')}>Home</span>
       </a>
 
-      {/* Divider */}
-      <div className="mx-1 h-6 w-[1px] bg-white/10 shrink-0"></div>
-
-      {/* --- Main Info Group --- */}
       <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className={getLinkClass('about')}>
-        <FiUser className="w-5 h-5" />
+        <FiUser className="w-5 h-5 md:w-4 md:h-4" />
         <span className={getTextClass('about')}>About</span>
       </a>
 
       <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className={getLinkClass('experience')}>
-        <FiBriefcase className="w-5 h-5" />
+        <FiBriefcase className="w-5 h-5 md:w-4 md:h-4" />
         <span className={getTextClass('experience')}>Work</span>
       </a>
 
       <a href="#skills" onClick={(e) => scrollToSection(e, 'skills')} className={getLinkClass('skills')}>
-        <FiCpu className="w-5 h-5" />
+        <FiCpu className="w-5 h-5 md:w-4 md:h-4" />
         <span className={getTextClass('skills')}>Skills</span>
       </a>
 
       <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className={getLinkClass('projects')}>
-        <FiCode className="w-5 h-5" />
+        <FiCode className="w-5 h-5 md:w-4 md:h-4" />
         <span className={getTextClass('projects')}>Projects</span>
       </a>
 
       {/* Divider */}
-      <div className="mx-1 h-6 w-[1px] bg-white/10 shrink-0"></div>
+      <div className="mx-1 h-6 w-[1px] bg-white/10 shrink-0 hidden md:block"></div>
 
-      {/* --- Action Group --- */}
       <a href="#resume" onClick={(e) => scrollToSection(e, 'resume')} className={getLinkClass('resume')}>
-        <FiFileText className="w-5 h-5" />
+        <FiFileText className="w-5 h-5 md:w-4 md:h-4" />
         <span className={getTextClass('resume')}>Resume</span>
       </a>
 
       <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className={getLinkClass('contact')}>
-        <FiMail className="w-5 h-5" />
+        <FiMail className="w-5 h-5 md:w-4 md:h-4" />
         <span className={getTextClass('contact')}>Contact</span>
       </a>
+
+      {/* PWA Install Button (Only visible if installable) */}
+      {deferredPrompt && (
+        <button onClick={handleInstallClick} className="relative flex items-center rounded-full px-4 py-3 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 text-sky-400 bg-sky-500/10 border border-sky-500/30 md:hidden">
+          <FiDownload className="w-5 h-5" />
+        </button>
+      )}
 
     </nav>
   );
