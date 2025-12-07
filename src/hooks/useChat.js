@@ -47,7 +47,7 @@ export const useChat = () => {
     // Tech Stack Triggers
     if (['stack', 'tech', 'skill', 'tool', 'language', 'framework', 'react', 'node'].some(k => lowerText.includes(k))) return 'stack';
     
-    // Vibe/Spotify Triggers (Expanded)
+    // Vibe/Spotify Triggers
     if (['music', 'song', 'vibe', 'listening', 'spotify', 'playing', 'sound', 'track', 'playlist', 'hear'].some(k => lowerText.includes(k))) return 'vibe';
     
     // Contact Triggers
@@ -62,8 +62,7 @@ export const useChat = () => {
     experience: "Here is a timeline of Laksh's professional journey and internships.",
     stack: "These are the weapons in Laksh's technical arsenal:",
     vibe: "Connecting to Spotify... Here's what keeps Laksh in the zone right now! 🎧",
-    contact: "I'd love to help you get in touch. Here is his contact card.",
-    education: "Laksh is a National Coding Champ! Here are his academic highlights."
+    contact: "I'd love to help you get in touch. Here is his contact card."
   };
 
   const sendMessage = async (messageText) => {
