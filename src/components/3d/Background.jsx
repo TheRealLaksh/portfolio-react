@@ -57,23 +57,24 @@ const SceneContent = ({ isMobile }) => {
     camera.rotation.z = scrollY * 0.0002;
   });
 
-  // FIX: Reduce particle count significantly on mobile
+  // UPDATED: Significantly increased star counts
   const counts = isMobile 
-    ? { dust: 1500, stars: 500, beacons: 100 }  // Mobile (Total: 2,100)
-    : { dust: 6000, stars: 2000, beacons: 500 }; // Desktop (Total: 8,500)
+    ? { dust: 4000, stars: 2000, beacons: 300 }  // Mobile (Boosted)
+    : { dust: 12000, stars: 5000, beacons: 800 }; // Desktop (Boosted)
 
   return (
     <group>
-      <fog attach="fog" args={['#050505', 10, 800]} />
+      {/* REMOVED FOG: This ensures "Clear Black" galaxy without gray fade */}
+      {/* <fog attach="fog" args={['#050505', 10, 800]} /> */}
       
       {/* Background Dust */}
-      <StarLayer count={counts.dust} size={0.5} color="#475569" opacity={0.3} />
+      <StarLayer count={counts.dust} size={0.5} color="#64748b" opacity={0.5} />
       
       {/* Mid-range Stars */}
-      <StarLayer count={counts.stars} size={1.2} color="#ffffff" opacity={0.6} />
+      <StarLayer count={counts.stars} size={1.2} color="#ffffff" opacity={0.8} />
       
       {/* Bright Beacons */}
-      <StarLayer count={counts.beacons} size={2.5} color="#38bdf8" opacity={0.9} />
+      <StarLayer count={counts.beacons} size={2.5} color="#38bdf8" opacity={1} />
     </group>
   );
 };
@@ -91,11 +92,11 @@ const Background = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 w-full h-full -z-10 bg-[#050505] pointer-events-none">
+    <div className="fixed inset-0 w-full h-full -z-10 bg-[#000000] pointer-events-none">
       <Canvas
         camera={{ position: [0, 0, 100], fov: 75 }}
-        gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
-        // FIX: Cap Pixel Ratio at 1 for mobile to save battery
+        // Removed alpha: false to ensure we control background color via CSS div above
+        gl={{ antialias: false, powerPreference: "high-performance" }}
         dpr={isMobile ? 1 : [1, 1.5]}
       >
         <SceneContent isMobile={isMobile} />

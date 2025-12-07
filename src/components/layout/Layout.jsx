@@ -4,14 +4,13 @@ import Preloader from '../ui/Preloader';
 import Navbar from './Navbar';
 import SocialSidebar from './SocialSidebar';
 import Footer from './Footer';
-import Spotlight from '../ui/Spotlight';
+// REMOVED: import Spotlight from '../ui/Spotlight'; (No longer needed)
 
 // LAZY LOAD HEAVY COMPONENTS
 const Background = React.lazy(() => import('../3d/Background'));
 const ChatWidget = React.lazy(() => import('../chat/ChatWidget'));
 
 // --- LIGHTWEIGHT SPINNER FALLBACK ---
-// Prevents "blank space" while lazy components load
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center w-full h-full min-h-[100px] p-4">
     <div className="w-6 h-6 border-2 border-sky-500/30 border-t-sky-500 rounded-full animate-spin"></div>
@@ -38,8 +37,10 @@ const Layout = ({ children }) => {
             <Suspense fallback={<div className="absolute inset-0 bg-black/90 flex items-center justify-center"><LoadingSpinner /></div>}>
                <Background />
             </Suspense>
-            <Spotlight />
-            <div className="bg-grain"></div>
+            
+            {/* REMOVED: Spotlight & Grain for "Clear Black" look */}
+            {/* <Spotlight /> */}
+            {/* <div className="bg-grain"></div> */}
          </motion.div>
       )}
 
