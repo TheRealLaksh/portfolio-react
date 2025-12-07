@@ -10,6 +10,7 @@ import {
   VibeCard 
 } from './ChatCards';
 
+// --- LOADING WAVE ---
 export const TypingWave = () => (
   <div className="flex gap-1 items-center h-4 px-2">
     {[0, 1, 2, 3].map((i) => (
@@ -23,6 +24,7 @@ export const TypingWave = () => (
   </div>
 );
 
+// --- ACTION CHIP BUTTON ---
 export const ActionChip = ({ icon: Icon, label, onClick }) => (
   <button
     onClick={onClick}
@@ -33,6 +35,7 @@ export const ActionChip = ({ icon: Icon, label, onClick }) => (
   </button>
 );
 
+// --- MESSAGE BUBBLE ---
 export const ChatBubble = ({ msg }) => {
   const isUser = msg.sender === 'You';
   
