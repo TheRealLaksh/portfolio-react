@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const LASTFM_USERNAME = 'lakshp';
-const LASTFM_API_KEY = '0b1d51f7f741582cd0895125d1da45c3';
+// FIX: Use Environment Variables for sensitive data
+// Fallbacks provided for dev, but recommend using .env
+const LASTFM_USERNAME = import.meta.env.VITE_LASTFM_USERNAME || 'lakshp';
+const LASTFM_API_KEY = import.meta.env.VITE_LASTFM_API_KEY || '0b1d51f7f741582cd0895125d1da45c3';
+
+// Construct URL dynamically
 const API_URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=1`;
 
 const useSpotify = () => {
@@ -20,7 +24,8 @@ const useSpotify = () => {
             name: track.name,
             artist: track.artist['#text'],
             album: track.album['#text'],
-            image: track.image[2]['#text'], // Large size
+            // Check if image exists before accessing index
+            image: track.image[2] ? track.image[2]['#text'] : null, 
             isPlaying: track['@attr']?.nowplaying === 'true',
             url: track.url
           });
@@ -33,7 +38,9 @@ const useSpotify = () => {
     };
 
     fetchSong();
-    const interval = setInterval(fetchSong, 10000); // Update every 10s
+    
+    // Poll every 10 seconds to check for song changes
+    const interval = setInterval(fetchSong, 10000); 
     return () => clearInterval(interval);
   }, []);
 

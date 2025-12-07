@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { triggerHaptic } from '../utils/triggerHaptic';
 
-const API_URL = 'https://ai-backend-2.vercel.app/api/chat';
-const API_KEY = 'AI-Laksh123';
+// FIX: Use Environment Variables for API Configuration
+// Define VITE_CHAT_API_URL and VITE_CHAT_API_KEY in your .env file
+const API_URL = import.meta.env.VITE_CHAT_API_URL || 'https://ai-backend-2.vercel.app/api/chat';
+const API_KEY = import.meta.env.VITE_CHAT_API_KEY || 'AI-Laksh123'; // Fallback for development
 
 export const useChat = () => {
   const [chatMessages, setChatMessages] = useState(() => {
@@ -111,6 +113,7 @@ export const useChat = () => {
       }
 
     } catch (error) {
+      console.error(error);
       addMessage({ sender: 'Aurora', content: 'My connection seems a bit unstable. Could you repeat that?', type: 'text' });
     } finally {
       setIsLoading(false);
