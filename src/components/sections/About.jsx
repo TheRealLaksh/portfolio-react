@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Tilt from 'react-parallax-tilt';
 import { motion } from 'framer-motion';
-import { FiCode, FiMapPin, FiCpu, FiGlobe, FiTerminal } from 'react-icons/fi';
+import { FiMapPin, FiCpu } from 'react-icons/fi';
 import profileImg from '../../assets/images/laksh.pradhwani.webp';
 import { TextReveal } from '../ui/TextReveal';
 import { Parallax } from '../ui/Parallax';
@@ -23,12 +23,13 @@ const TerminalBio = () => {
       setText(fullText.slice(0, index));
       index++;
       if (index > fullText.length) clearInterval(interval);
-    }, 30); // Typing speed
+    }, 30);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-w-[90vw] md:min-w-0 w-full rounded-xl bg-[#1e1e1e] border border-slate-700 shadow-2xl overflow-hidden group hover:border-slate-500 transition-colors duration-300 snap-center">
+    // Fixed: Removed min-w-[90vw] to prevent mobile overflow. Now strict 100% width.
+    <div className="w-full rounded-xl bg-[#1e1e1e] border border-slate-700 shadow-2xl overflow-hidden group hover:border-slate-500 transition-colors duration-300">
       {/* Terminal Header */}
       <div className="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-slate-700">
         <div className="flex gap-1.5">
@@ -42,8 +43,8 @@ const TerminalBio = () => {
       </div>
       
       {/* Code Body */}
-      <div className="p-6 font-mono text-sm sm:text-base leading-relaxed overflow-x-auto">
-        <pre className="text-slate-300 whitespace-pre-wrap">
+      <div className="p-4 md:p-6 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
+        <pre className="text-slate-300 whitespace-pre-wrap break-words">
           <span className="text-pink-400">const</span> <span className="text-sky-400">Laksh</span> <span className="text-white">=</span> <span className="text-yellow-300">{'{'}</span>
           <br />
           {text}
@@ -59,8 +60,8 @@ const TerminalBio = () => {
 // --- SUB-COMPONENT: LOCATION RADAR ---
 const LocationRadar = () => {
   return (
-    <div className="relative group cursor-crosshair min-w-[200px]">
-      <div className="relative w-32 h-32 flex items-center justify-center mx-auto">
+    <div className="relative group cursor-crosshair w-full h-full flex flex-col items-center justify-center min-h-[200px]">
+      <div className="relative w-32 h-32 flex items-center justify-center">
         {/* Outer Ring */}
         <div className="absolute inset-0 border border-emerald-500/30 rounded-full animate-[spin_4s_linear_infinite]"></div>
         <div className="absolute inset-2 border border-emerald-500/10 rounded-full border-dashed animate-[spin_10s_linear_infinite_reverse]"></div>
@@ -79,7 +80,7 @@ const LocationRadar = () => {
            <div className="text-[9px] text-slate-500 font-mono mt-0.5">LAT: 25.3176° N | LNG: 82.9739° E</div>
         </div>
       </div>
-      <p className="text-center text-[10px] font-mono text-emerald-500/60 mt-2 tracking-widest">SYSTEM ONLINE</p>
+      <p className="text-center text-[10px] font-mono text-emerald-500/60 mt-4 tracking-widest">SYSTEM ONLINE</p>
     </div>
   );
 };
@@ -88,17 +89,15 @@ const About = () => {
   return (
     <section id="about" className="my-20 sm:my-32 relative z-10 overflow-hidden">
       
-      {/* 9. PARALLAX FLOATING ELEMENTS */}
+      {/* Parallax Elements */}
       <div className="absolute inset-0 pointer-events-none z-0">
          <Parallax speed={-0.2} className="absolute top-[10%] left-[5%] text-slate-800/50 text-6xl font-bold font-mono opacity-20">01</Parallax>
          <Parallax speed={0.1} className="absolute top-[20%] right-[10%] text-sky-900/20 text-8xl font-black opacity-10">{'}'}</Parallax>
-         <Parallax speed={-0.1} className="absolute bottom-[10%] left-[15%] text-purple-900/20 text-9xl font-black opacity-10">{'</>'}</Parallax>
-         <Parallax speed={0.3} className="absolute top-[40%] right-[5%] w-32 h-32 border border-slate-800/30 rounded-full"></Parallax>
       </div>
 
       <div className="w-full px-6 md:px-12 relative z-10 max-w-[1600px] mx-auto">
 
-        <TextReveal className="mb-20 text-center flex justify-center">
+        <TextReveal className="mb-12 md:mb-20 text-center flex justify-center">
           <h2 className="section-title text-4xl md:text-5xl font-bold text-white relative inline-block">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-purple-500">
               User Profile
@@ -106,19 +105,18 @@ const About = () => {
           </h2>
         </TextReveal>
 
-        <div className="flex flex-col xl:flex-row items-center gap-16">
+        <div className="flex flex-col xl:flex-row items-center xl:items-start gap-12 md:gap-16">
 
-          {/* LEFT: 1. HOLOGRAPHIC PROFILE CARD */}
-          <div className="w-full xl:w-5/12 flex flex-col items-center">
+          {/* LEFT: Profile Card */}
+          <div className="w-full max-w-md xl:w-5/12 flex flex-col items-center sticky top-24">
             <Tilt 
-                tiltMaxAngleX={15} 
-                tiltMaxAngleY={15} 
+                tiltMaxAngleX={10} 
+                tiltMaxAngleY={10} 
                 perspective={1000} 
-                scale={1.05}
+                scale={1.02}
                 gyroscope={true}
-                className="relative w-full max-w-[400px] aspect-[4/5] rounded-2xl overflow-hidden group"
+                className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden group border border-white/5 bg-slate-900/50 shadow-2xl"
             >
-                {/* Image */}
                 <img 
                   src={profileImg} 
                   alt="Laksh Pradhwani"
@@ -126,7 +124,7 @@ const About = () => {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 brightness-75 group-hover:brightness-100"
                 />
 
-                {/* Holographic Overlay Effects */}
+                {/* Overlays */}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none mix-blend-overlay"></div>
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-200"></div>
                 
@@ -137,43 +135,31 @@ const About = () => {
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 />
 
-                {/* ID Badge Details (Bottom) */}
-                <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                {/* Badge Bottom */}
+                <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent z-10">
                    <div className="flex justify-between items-end border-b border-white/20 pb-4 mb-4">
                       <div>
-                        <h3 className="text-2xl font-bold text-white tracking-wide">LAKSH.P</h3>
+                        <h3 className="text-3xl font-bold text-white tracking-wide">LAKSH.P</h3>
                         <p className="text-sky-400 text-xs font-mono tracking-widest mt-1">LVL. 18 DEV</p>
                       </div>
                       <FiCpu className="text-slate-400 text-2xl animate-pulse" />
                    </div>
                    <div className="grid grid-cols-2 gap-4 text-[10px] font-mono text-slate-400">
-                      <div>
-                         <span className="block text-slate-600">CLASS</span>
-                         ENGINEER
-                      </div>
-                      <div className="text-right">
-                         <span className="block text-slate-600">STATUS</span>
-                         <span className="text-green-400">ONLINE</span>
-                      </div>
+                      <div><span className="block text-slate-600">CLASS</span>ENGINEER</div>
+                      <div className="text-right"><span className="block text-slate-600">STATUS</span><span className="text-green-400">ONLINE</span></div>
                    </div>
                 </div>
             </Tilt>
           </div>
 
-          {/* RIGHT: CONTENT & WIDGETS */}
+          {/* RIGHT: Content Stack */}
           <div className="w-full xl:w-7/12 flex flex-col gap-8">
             
-            {/* Mobile: Swipeable Carousel for Terminal & Radar */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:block md:space-y-8 no-scrollbar">
-                <TerminalBio />
-                {/* Mobile-only Radar wrapper in carousel */}
-                <div className="min-w-[80vw] md:hidden snap-center flex items-center justify-center bg-slate-900/50 border border-slate-800 rounded-xl">
-                    <LocationRadar />
-                </div>
-            </div>
+            {/* 1. Terminal Bio */}
+            <TerminalBio />
 
-            {/* Standard Text Description */}
-            <div className="text-slate-300 text-lg leading-relaxed space-y-6 font-light">
+            {/* 2. Biography Text */}
+            <div className="text-slate-300 text-base md:text-lg leading-relaxed space-y-6 font-light">
                 <TextReveal>
                   <p>
                     I’m an aspiring <strong className="text-sky-400">AI/ML Engineer</strong> and high
@@ -206,24 +192,24 @@ const About = () => {
                 </TextReveal>
             </div>
 
-            {/* Desktop Grid for Widgets (Hidden on mobile swipe view) */}
-            <div className="hidden md:grid grid-cols-2 gap-6 mt-4">
+            {/* 3. Widgets Grid (Vertical on Mobile, 2-Col on Desktop) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 
                 {/* Radar Card */}
-                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 flex flex-col items-center justify-center backdrop-blur-sm">
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 backdrop-blur-sm">
                    <LocationRadar />
                 </div>
 
                 {/* System Stats Card */}
-                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 backdrop-blur-sm flex flex-col justify-center gap-4 font-mono text-xs">
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-8 backdrop-blur-sm flex flex-col justify-center gap-6 font-mono text-xs">
                    <div className="flex justify-between items-center pb-2 border-b border-slate-800">
                       <span className="text-slate-500">SYSTEM CHECK</span>
-                      <span className="text-green-400">ALL SYSTEMS GO</span>
+                      <span className="text-green-400 animate-pulse">ALL SYSTEMS GO</span>
                    </div>
                    
-                   <div className="space-y-3">
+                   <div className="space-y-5">
                       <div>
-                        <div className="flex justify-between mb-1">
+                        <div className="flex justify-between mb-2">
                           <span className="text-slate-400">LOGIC</span>
                           <span className="text-sky-400">98%</span>
                         </div>
@@ -238,7 +224,7 @@ const About = () => {
                       </div>
 
                       <div>
-                        <div className="flex justify-between mb-1">
+                        <div className="flex justify-between mb-2">
                           <span className="text-slate-400">CREATIVITY</span>
                           <span className="text-purple-400">94%</span>
                         </div>
@@ -253,9 +239,9 @@ const About = () => {
                       </div>
 
                       <div>
-                        <div className="flex justify-between mb-1">
+                        <div className="flex justify-between mb-2">
                           <span className="text-slate-400">CAFFEINE</span>
-                          <span className="text-red-400 animate-pulse">110%</span>
+                          <span className="text-red-400">110%</span>
                         </div>
                         <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
                            <motion.div 
