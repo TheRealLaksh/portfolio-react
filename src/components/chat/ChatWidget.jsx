@@ -260,7 +260,7 @@ function ChatWidget() {
       }
 
     } catch {
-      setChatMessages((prev) => [...prev, { sender: 'Aurora', content: 'Error. Please try again.', type: 'text' }]);
+      setChatMessages((prev) => [...prev, { sender: 'Aurora', content: 'Could you please repeat your request.', type: 'text' }]);
     } finally {
       setIsLoading(false);
     }
