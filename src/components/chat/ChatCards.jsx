@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   FiGithub, FiLinkedin, FiInstagram, FiMail, FiExternalLink, 
-  FiCalendar, FiDownload, FiMusic, FiCpu, FiBriefcase, FiAward, FiStar 
+  FiCalendar, FiDownload, FiMusic, FiCpu, FiBriefcase, FiStar 
 } from 'react-icons/fi';
 import useSpotify from '../../hooks/useSpotify';
-import useGitHub from '../../hooks/useGitHub'; // Import the hook
+import useGitHub from '../../hooks/useGitHub';
 import profileImg from '../../assets/images/laksh.pradhwani.webp';
 import resumeFile from '../../assets/resume/laksh.pradhwani.resume.pdf';
 import { skillsData } from '../../data/skillsData';
+import { experienceData } from '../../data/timelineData'; // Import Experience Data
 
 // --- 1. CONTACT CARD ---
 export const ContactCard = () => {
@@ -84,7 +85,7 @@ export const ContactCard = () => {
   );
 };
 
-// --- 2. PROJECT SPOTLIGHT CARD (Carousel) ---
+// --- 2. PROJECT SPOTLIGHT CARD ---
 export const ProjectCard = () => {
   const { projects, loading, error } = useGitHub();
 
@@ -108,18 +109,14 @@ export const ProjectCard = () => {
     <div className="flex gap-4 overflow-x-auto pb-4 max-w-[85vw] md:max-w-[500px] snap-x custom-scrollbar">
       {projects.map((repo) => (
         <div key={repo.id} className="min-w-[280px] snap-center bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl flex flex-col">
-           {/* Card Thumbnail */}
            <div className="aspect-video w-full bg-slate-800 rounded-lg mb-3 overflow-hidden relative group">
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-              
-              {/* Dynamic Gradient Background based on ID to distinguish cards */}
               <div 
                 className="w-full h-full opacity-60 transition-transform duration-700 group-hover:scale-110" 
                 style={{ 
                     background: `linear-gradient(135deg, hsl(${repo.id % 360}, 60%, 20%), hsl(${(repo.id + 100) % 360}, 60%, 40%))` 
                 }}
               ></div>
-
               <div className="absolute bottom-3 left-3 z-20 flex flex-wrap gap-1">
                  <span className="text-[9px] font-bold text-white bg-white/10 backdrop-blur-md px-2 py-0.5 rounded border border-white/10 uppercase tracking-wide">
                     {repo.genre || 'CODE'}
@@ -138,21 +135,11 @@ export const ProjectCard = () => {
            </p>
 
            <div className="flex gap-2 mt-auto">
-              <a 
-                href={repo.url} 
-                target="_blank" 
-                rel="noreferrer" 
-                className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 py-2.5 rounded-lg text-center text-xs font-medium text-slate-300 transition-colors flex items-center justify-center gap-2 group"
-              >
+              <a href={repo.url} target="_blank" rel="noreferrer" className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 py-2.5 rounded-lg text-center text-xs font-medium text-slate-300 transition-colors flex items-center justify-center gap-2 group">
                 <FiGithub className="group-hover:text-white" /> Code
               </a>
               {repo.demo && (
-                <a 
-                  href={repo.demo} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-2.5 rounded-lg text-center text-xs font-bold transition-all shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2"
-                >
+                <a href={repo.demo} target="_blank" rel="noreferrer" className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-2.5 rounded-lg text-center text-xs font-bold transition-all shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2">
                   <FiExternalLink /> Live
                 </a>
               )}
@@ -163,24 +150,45 @@ export const ProjectCard = () => {
   );
 };
 
-// --- 3. EXPERIENCE / ROLE CARD ---
+// --- 3. EXPERIENCE / ROLE CARD (Updated) ---
 export const ExperienceCard = () => (
-  <div className="w-[260px] bg-slate-900/90 backdrop-blur-xl border border-emerald-500/30 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-     <div className="absolute top-0 right-0 p-3 opacity-10 text-emerald-500"><FiBriefcase size={80} /></div>
-     <div className="relative z-10">
-        <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center mb-3">
-           {/* Placeholder for Company Logo */}
-           <span className="text-black font-bold text-xs">UM</span>
-        </div>
-        <h4 className="text-white font-bold text-lg">Full Stack Dev</h4>
-        <p className="text-emerald-400 text-xs font-medium mb-3">Unified Mentor • Oct 2025</p>
-        <div className="h-[1px] w-full bg-white/10 mb-3"></div>
-        <ul className="text-[11px] text-slate-400 space-y-1.5 list-disc pl-3">
-           <li>Built dynamic React UIs & Redux states.</li>
-           <li>Collaborated on industry-level projects.</li>
-           <li>Reduced load times by 20%.</li>
-        </ul>
-     </div>
+  <div className="flex gap-4 overflow-x-auto pb-4 max-w-[85vw] md:max-w-[500px] snap-x custom-scrollbar">
+     {experienceData.map((item) => (
+       <div key={item.id} className="min-w-[280px] snap-center bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col">
+          <div className={`absolute top-0 right-0 p-3 opacity-10 text-${item.theme}-500`}><FiBriefcase size={80} /></div>
+          
+          <div className="relative z-10 flex-1">
+             <div className="flex justify-between items-start mb-3">
+                <div className="w-12 h-12 rounded-xl bg-white p-1 flex items-center justify-center">
+                   <img src={item.logo} alt={item.company} className="w-full h-full object-contain" />
+                </div>
+                <span className={`text-[10px] font-mono border border-${item.theme}-500/30 bg-${item.theme}-500/10 text-${item.theme}-400 px-2 py-1 rounded-full`}>
+                   {item.date}
+                </span>
+             </div>
+
+             <h4 className="text-white font-bold text-lg leading-tight mb-0.5">{item.title}</h4>
+             <p className={`text-${item.theme}-400 text-xs font-medium mb-3`}>{item.company}</p>
+             
+             <div className="h-[1px] w-full bg-white/10 mb-3"></div>
+             
+             <p className="text-xs text-slate-400 leading-relaxed mb-4 line-clamp-4">
+                {item.description}
+             </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-auto relative z-10">
+             {item.skills.slice(0, 3).map((skill, i) => (
+                <span key={i} className="text-[10px] text-slate-300 bg-slate-800/80 border border-white/5 px-2 py-1 rounded-md">
+                   {skill}
+                </span>
+             ))}
+             {item.skills.length > 3 && (
+                <span className="text-[10px] text-slate-500 px-1 py-1">+ {item.skills.length - 3}</span>
+             )}
+          </div>
+       </div>
+     ))}
   </div>
 );
 
@@ -203,24 +211,7 @@ export const TechStackCard = () => (
   </div>
 );
 
-// --- 5. EDUCATION BADGE ---
-export const EducationCard = () => (
-  <div className="w-[260px] bg-gradient-to-br from-slate-900 to-slate-950 border border-yellow-500/30 rounded-2xl p-1 shadow-xl">
-     <div className="border border-white/5 rounded-xl p-4 flex flex-col items-center text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-        <div className="w-12 h-12 rounded-full bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 mb-3 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
-           <FiAward size={24} />
-        </div>
-        <h4 className="text-white font-bold text-sm mb-1">National Coding Champ</h4>
-        <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-3">VVM National Finalist</p>
-        <div className="text-[10px] text-yellow-500/80 bg-yellow-500/5 px-3 py-1 rounded-full border border-yellow-500/10">
-           Ranked Top 1% in Region
-        </div>
-     </div>
-  </div>
-);
-
-// --- 6. NOW PLAYING / VIBE CARD ---
+// --- 5. NOW PLAYING / VIBE CARD ---
 export const VibeCard = () => {
   const { song } = useSpotify();
   
@@ -257,7 +248,6 @@ export const VibeCard = () => {
           </div>
        </div>
        
-       {/* Audio Wave Animation */}
        <div className="flex items-end gap-0.5 h-3 mt-3 ml-1">
           {[...Array(12)].map((_, i) => (
              <motion.div 
