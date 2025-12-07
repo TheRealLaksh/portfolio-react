@@ -5,7 +5,6 @@ import { cn } from '../../utils/cn';
 import { triggerHaptic } from '../../utils/triggerHaptic';
 import resumeFile from '../../assets/resume/laksh.pradhwani.resume.pdf';
 
-// Imports from split files
 import { useChat } from '../../hooks/useChat';
 import { TypingWave, ActionChip, ChatBubble } from './ChatUI';
 
@@ -52,11 +51,9 @@ const ChatWidget = () => {
   const [hasBooted, setHasBooted] = useState(false);
   const [inputValue, setInputValue] = useState('');
   
-  // Custom Hook Logic
   const { chatMessages, isLoading, sendMessage, clearChat, addMessage } = useChat();
   const messagesEndRef = useRef(null);
 
-  // --- EVENT LISTENERS & EFFECTS ---
   useEffect(() => {
     const timer = setTimeout(() => { if (!isOpen) setShowNotification(true); }, 3000);
     return () => clearTimeout(timer);
@@ -66,24 +63,20 @@ const ChatWidget = () => {
     if (isOpen) setShowNotification(false);
   }, [isOpen]);
 
-  // Mobile Dock Toggle Listener
   useEffect(() => {
     const handleToggle = () => { triggerHaptic(); setIsOpen(prev => !prev); };
     window.addEventListener('toggle-chat', handleToggle);
     return () => window.removeEventListener('toggle-chat', handleToggle);
   }, []);
 
-  // Boot Sequence Trigger
   useEffect(() => {
     if (isOpen && !hasBooted) setIsBooting(true);
   }, [isOpen, hasBooted]);
 
-  // Auto Scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages, isLoading, isOpen, isExpanded]);
 
-  // --- HANDLERS ---
   const handleSend = () => {
     if (!inputValue.trim()) return;
     sendMessage(inputValue);
@@ -111,7 +104,6 @@ const ChatWidget = () => {
 
   return (
     <>
-      {/* 1. NOTIFICATION BUBBLE */}
       <AnimatePresence>
         {showNotification && !isOpen && (
           <motion.div
@@ -133,7 +125,6 @@ const ChatWidget = () => {
         )}
       </AnimatePresence>
 
-      {/* 2. CHAT WINDOW */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -151,7 +142,6 @@ const ChatWidget = () => {
                 isExpanded ? "md:w-[600px] md:h-[700px]" : "md:w-[380px] md:h-[550px]"
               )}
             >
-              {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/5 z-20">
                 <div>
                   <div className="text-sm font-bold text-white flex items-center gap-2">
@@ -167,7 +157,6 @@ const ChatWidget = () => {
                 </div>
               </div>
 
-              {/* Body */}
               <div className="relative flex-1 flex flex-col overflow-hidden">
                 <div className="absolute inset-0 opacity-[0.04] pointer-events-none z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 

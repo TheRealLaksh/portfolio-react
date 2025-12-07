@@ -18,7 +18,6 @@ export const useChat = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize Unique User ID
   useEffect(() => {
     if (!userId) {
       const newId = 'user-' + Date.now();
@@ -27,7 +26,6 @@ export const useChat = () => {
     }
   }, [userId]);
 
-  // Persist Messages
   useEffect(() => {
     localStorage.setItem('auroraChatMessages', JSON.stringify(chatMessages));
   }, [chatMessages]);
@@ -36,12 +34,26 @@ export const useChat = () => {
     setChatMessages((prev) => [...prev, msg]);
   };
 
+  // --- NEW: LOGIC TO DETECT CARD TYPE ---
+  const detectCardTrigger = (text) => {
+    const lowerText = text.toLowerCase();
+    if (lowerText.includes('project') || lowerText.includes('work') || lowerText.includes('built')) return 'project';
+    if (lowerText.includes('experience') || lowerText.includes('job') || lowerText.includes('intern')) return 'experience';
+    if (lowerText.includes('stack') || lowerText.includes('tech') || lowerText.includes('skill')) return 'stack';
+    if (lowerText.includes('education') || lowerText.includes('study') || lowerText.includes('college')) return 'education';
+    if (lowerText.includes('music') || lowerText.includes('song') || lowerText.includes('vibe')) return 'vibe';
+    if (lowerText.includes('contact') || lowerText.includes('email') || lowerText.includes('hire')) return 'contact';
+    return null;
+  };
+
   const sendMessage = async (messageText) => {
     if (!messageText.trim() || isLoading) return;
 
-    // Add User Message
     addMessage({ sender: 'You', content: messageText, type: 'text' });
     setIsLoading(true);
+
+    // 1. Detect if User requested a specific card
+    const cardTrigger = detectCardTrigger(messageText);
 
     try {
       const response = await fetch(API_URL, {
@@ -54,22 +66,21 @@ export const useChat = () => {
       const data = await response.json();
 
       let aiReply = data?.reply || '';
-      let showCard = false;
+      let triggerCard = cardTrigger; // Default to user intent
 
-      // Check for Contact Card Tag
+      // 2. Check if Backend explicitly requested a card (Overwrites user intent)
       if (aiReply.includes('[SHOW_CONTACT_CARD]')) {
-        showCard = true;
+        triggerCard = 'contact';
         aiReply = aiReply.replace('[SHOW_CONTACT_CARD]', '');
       }
 
-      // Add AI Response
       addMessage({ sender: 'Aurora', content: aiReply, type: 'mdx' });
 
-      // Trigger Card if needed
-      if (showCard) {
+      // 3. Show Card if triggered
+      if (triggerCard) {
         setTimeout(() => {
           triggerHaptic();
-          addMessage({ sender: 'Aurora', type: 'contact' });
+          addMessage({ sender: 'Aurora', type: triggerCard });
         }, 600);
       }
 
@@ -84,7 +95,6 @@ export const useChat = () => {
     setChatMessages([]);
     localStorage.removeItem('auroraChatMessages');
     try {
-      // Optional: Clear history on backend
       await fetch(API_URL, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
@@ -93,11 +103,5 @@ export const useChat = () => {
     } catch (e) { console.error(e); }
   };
 
-  return {
-    chatMessages,
-    isLoading,
-    addMessage,
-    sendMessage,
-    clearChat
-  };
+  return { chatMessages, isLoading, addMessage, sendMessage, clearChat };
 };
