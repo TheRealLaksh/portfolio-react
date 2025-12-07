@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail, FiDownload } from 'react-icons/fi';
+import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail, FiDownload, FiMessageSquare } from 'react-icons/fi';
 import useScrollSpy from '../../hooks/useScrollSpy';
 import { cn } from '../../utils/cn';
 import { triggerWarp } from '../../utils/triggerWarp';
 import { triggerHaptic } from '../../utils/triggerHaptic';
-import { useLenis } from '@studio-freight/react-lenis'; // Import Hook
+import { useLenis } from '@studio-freight/react-lenis';
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   
   const navIds = ['home', 'about', 'experience', 'skills', 'projects', 'resume', 'contact'];
   const activeSection = useScrollSpy(navIds);
-  const lenis = useLenis(); // Access Lenis instance
+  const lenis = useLenis();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,14 +27,13 @@ const Navbar = () => {
       }
       
       setLastScrollY(currentScrollY);
-      setIsScrolled(currentScrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // PWA Install Prompt Listener
+  // PWA Install Prompt
   useEffect(() => {
     const handler = (e) => {
       e.preventDefault();
@@ -57,29 +55,33 @@ const Navbar = () => {
     }
   };
 
+  // Open Chat Event
+  const openChat = () => {
+    triggerHaptic();
+    window.dispatchEvent(new Event('toggle-chat'));
+  };
+
   const scrollToSection = (e, id) => {
     e.preventDefault();
     triggerHaptic();
     triggerWarp();
     
-    // Use Lenis for smooth scrolling if available
     if (lenis) {
       lenis.scrollTo(`#${id}`, {
-        offset: -50, // Slight offset for fixed header
+        offset: -50,
         duration: 1.5,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) // Premium easing
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
       });
     } else {
-      // Fallback
       const element = document.getElementById(id);
       if (element) {
-        element.scrollIntoView({ behavior: 'auto' }); // 'auto' to prevent conflict if css smooth is off
+        element.scrollIntoView({ behavior: 'auto' });
       }
     }
   };
 
   const getLinkClass = (id) => cn(
-    "relative flex items-center rounded-full md:rounded-xl px-4 py-3 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 group hover:bg-white/5",
+    "relative flex items-center justify-center rounded-full md:rounded-xl px-4 py-3 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 group hover:bg-white/5",
     activeSection === id 
       ? "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.15)] scale-110 md:scale-100" 
       : "text-slate-400 hover:text-slate-200 active:scale-95"
@@ -94,7 +96,7 @@ const Navbar = () => {
 
   return (
     <nav className={cn(
-      "fixed left-1/2 -translate-x-1/2 z-50 flex flex-nowrap items-center gap-2 md:gap-1 rounded-full md:rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl p-2 md:p-2 shadow-2xl shadow-black/80 transition-all duration-500 max-w-[90vw] overflow-x-auto no-scrollbar",
+      "fixed left-1/2 -translate-x-1/2 z-50 flex flex-nowrap items-center gap-2 md:gap-1 rounded-full md:rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl p-2 md:p-2 shadow-2xl shadow-black/80 transition-all duration-500 max-w-[95vw] overflow-x-auto no-scrollbar",
       "bottom-6 pb-safe", 
       "md:bottom-auto md:top-6",
       !isVisible && "translate-y-[200%] opacity-0 md:translate-y-0 md:opacity-100"
@@ -137,8 +139,17 @@ const Navbar = () => {
         <span className={getTextClass('contact')}>Contact</span>
       </a>
 
+      {/* MOBILE ONLY: Chat Button in Dock */}
+      <button 
+        onClick={openChat} 
+        className="relative flex items-center justify-center rounded-full px-4 py-3 md:hidden text-sky-400 bg-sky-500/10 border border-sky-500/30 active:scale-95 transition-all"
+      >
+        <FiMessageSquare className="w-5 h-5" />
+      </button>
+
+      {/* MOBILE ONLY: PWA Install (if available) */}
       {deferredPrompt && (
-        <button onClick={handleInstallClick} className="relative flex items-center rounded-full px-4 py-3 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 text-sky-400 bg-sky-500/10 border border-sky-500/30 md:hidden">
+        <button onClick={handleInstallClick} className="relative flex items-center rounded-full px-4 py-3 md:hidden text-green-400 bg-green-500/10 border border-green-500/30 active:scale-95 transition-all">
           <FiDownload className="w-5 h-5" />
         </button>
       )}
