@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail, FiDownload } from 'react-icons/fi'; // Added FiDownload
+import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail, FiDownload } from 'react-icons/fi';
 import useScrollSpy from '../../hooks/useScrollSpy';
 import { cn } from '../../utils/cn';
 import { triggerWarp } from '../../utils/triggerWarp';
 import { triggerHaptic } from '../../utils/triggerHaptic';
+import { useLenis } from '@studio-freight/react-lenis'; // Import Hook
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -13,6 +14,7 @@ const Navbar = () => {
   
   const navIds = ['home', 'about', 'experience', 'skills', 'projects', 'resume', 'contact'];
   const activeSection = useScrollSpy(navIds);
+  const lenis = useLenis(); // Access Lenis instance
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,11 +61,20 @@ const Navbar = () => {
     e.preventDefault();
     triggerHaptic();
     triggerWarp();
-    const element = document.getElementById(id);
-    if (element) {
-      setTimeout(() => {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+    
+    // Use Lenis for smooth scrolling if available
+    if (lenis) {
+      lenis.scrollTo(`#${id}`, {
+        offset: -50, // Slight offset for fixed header
+        duration: 1.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) // Premium easing
+      });
+    } else {
+      // Fallback
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'auto' }); // 'auto' to prevent conflict if css smooth is off
+      }
     }
   };
 
@@ -75,7 +86,7 @@ const Navbar = () => {
   );
 
   const getTextClass = (id) => cn(
-    "overflow-hidden transition-all duration-300 ease-in-out hidden md:block", // Hide text on mobile
+    "overflow-hidden transition-all duration-300 ease-in-out hidden md:block",
     activeSection === id 
       ? "w-auto opacity-100 ml-2" 
       : "w-0 opacity-0 group-hover:w-auto group-hover:opacity-100 group-hover:ml-2"
@@ -84,11 +95,8 @@ const Navbar = () => {
   return (
     <nav className={cn(
       "fixed left-1/2 -translate-x-1/2 z-50 flex flex-nowrap items-center gap-2 md:gap-1 rounded-full md:rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl p-2 md:p-2 shadow-2xl shadow-black/80 transition-all duration-500 max-w-[90vw] overflow-x-auto no-scrollbar",
-      // Mobile Positioning (Bottom Dock)
       "bottom-6 pb-safe", 
-      // Desktop Positioning (Top Bar)
       "md:bottom-auto md:top-6",
-      // Auto-Hide Animation (Mobile Only)
       !isVisible && "translate-y-[200%] opacity-0 md:translate-y-0 md:opacity-100"
     )}>
       
@@ -117,7 +125,6 @@ const Navbar = () => {
         <span className={getTextClass('projects')}>Projects</span>
       </a>
 
-      {/* Divider */}
       <div className="mx-1 h-6 w-[1px] bg-white/10 shrink-0 hidden md:block"></div>
 
       <a href="#resume" onClick={(e) => scrollToSection(e, 'resume')} className={getLinkClass('resume')}>
@@ -130,7 +137,6 @@ const Navbar = () => {
         <span className={getTextClass('contact')}>Contact</span>
       </a>
 
-      {/* PWA Install Button (Only visible if installable) */}
       {deferredPrompt && (
         <button onClick={handleInstallClick} className="relative flex items-center rounded-full px-4 py-3 md:px-2 md:py-2 text-sm font-medium transition-all duration-300 shrink-0 text-sky-400 bg-sky-500/10 border border-sky-500/30 md:hidden">
           <FiDownload className="w-5 h-5" />

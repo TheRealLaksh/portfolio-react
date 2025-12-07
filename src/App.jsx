@@ -11,8 +11,6 @@ import Contact from './components/sections/Contact';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-// REMOVED: import ChatWidget from './components/chat/ChatWidget'; 
-
 function App() {
   useEffect(() => {
     AOS.init({
@@ -23,8 +21,16 @@ function App() {
     });
   }, []);
 
+  // Lenis Settings for "Butter Smooth" Feel
+  const lenisOptions = {
+    lerp: 0.07,         // Lower = smoother/heavier (default 0.1)
+    duration: 1.2,      // Scroll duration
+    smoothTouch: false, // Keep native touch feel for better mobile UX, or set true for unified feel
+    touchMultiplier: 2, // Faster touch scrolling
+  };
+
   return (
-    <ReactLenis root>
+    <ReactLenis root options={lenisOptions}>
       <Layout>
         <Hero />
         <About />
@@ -35,8 +41,6 @@ function App() {
         <Contact />
         <div className="h-[100px]" />
       </Layout>
-
-      {/* REMOVED: <ChatWidget /> */}
     </ReactLenis>
   );
 }
