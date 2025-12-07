@@ -9,7 +9,6 @@ import resumeFile from '../../assets/resume/laksh.pradhwani.resume.pdf';
 import { useChat } from '../../hooks/useChat';
 import { TypingWave, ActionChip, ChatBubble } from './ChatUI';
 
-// --- BOOT SCREEN COMPONENT (Local) ---
 const BootScreen = ({ onComplete }) => {
   const [lines, setLines] = useState([]);
   
@@ -176,7 +175,7 @@ const ChatWidget = () => {
                   <BootScreen onComplete={() => { setIsBooting(false); setHasBooted(true); }} />
                 ) : (
                   <>
-                    <div className="flex-1 overflow-y-auto px-5 py-5 space-y-5 custom-scrollbar z-10">
+                    <div className="flex-1 overflow-y-auto min-h-0 px-5 py-5 space-y-5 custom-scrollbar z-10">
                       {chatMessages.length === 0 && (
                         <div className="h-full flex flex-col items-center justify-center text-center p-6">
                           <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mb-4 border border-white/5"><FiMessageSquare size={24} className="text-sky-500/80" /></div>
@@ -226,7 +225,6 @@ const ChatWidget = () => {
         )}
       </AnimatePresence>
 
-      {/* Floating Toggle Button */}
       <button onClick={() => { triggerHaptic(); setIsOpen(!isOpen); }} className="fixed bottom-6 right-6 z-[60] group hidden md:flex items-center justify-end w-12 hover:w-36 h-12 rounded-full overflow-hidden transition-all duration-500 ease-out bg-transparent border border-transparent hover:bg-slate-900 hover:border-slate-700 hover:shadow-2xl hover:shadow-sky-900/20 active:scale-95">
         <div className="absolute inset-0 w-full h-full bg-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <span className="absolute right-14 opacity-0 group-hover:opacity-100 text-sky-400 font-medium text-sm whitespace-nowrap transition-all duration-500 delay-75">AI Assistant</span>
