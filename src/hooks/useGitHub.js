@@ -5,7 +5,7 @@ const GITHUB_USERNAME = 'TheRealLaksh';
 const REPO_NAMES = [
   'portfolio-react',
   'stranger-things',
-  'Music-Player',
+  'Profiley-Resume-Builder',
   'Callender-Events',
   'Portfolio-Website', 
   'Shopping-demo'
