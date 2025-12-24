@@ -45,6 +45,9 @@ export const ChatBubble = ({ msg }) => {
   if (msg.type === 'experience') return <ExperienceCard />;
   if (msg.type === 'stack') return <TechStackCard />;
   if (msg.type === 'vibe') return <VibeCard />;
+  
+  // New: Services type returns nothing (handled by redirection in ChatWidget)
+  if (msg.type === 'services') return null;
 
   // 2. Render Standard Text
   return (

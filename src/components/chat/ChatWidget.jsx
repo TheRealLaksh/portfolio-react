@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiMessageSquare, FiX, FiSend, FiBriefcase, 
-  FiFileText, FiMail, FiMinimize2, FiMaximize2 
-} from 'react-icons/fi'; // Updated imports
+  FiFileText, FiMail, FiMinimize2, FiMaximize2, FiPackage 
+} from 'react-icons/fi'; // Added FiPackage
 import { cn } from '../../utils/cn';
 import { triggerHaptic } from '../../utils/triggerHaptic';
 import resumeFile from '../../assets/resume/laksh.pradhwani.resume.pdf';
@@ -86,6 +86,23 @@ const ChatWidget = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages, isLoading, isOpen, isExpanded]);
 
+  // --- NEW: Handle Redirects for Services ---
+  useEffect(() => {
+    const lastMsg = chatMessages[chatMessages.length - 1];
+    
+    if (lastMsg?.type === 'services') {
+      // Small delay to let user read the "Navigating..." message
+      setTimeout(() => {
+        setIsOpen(false);
+        const servicesSection = document.getElementById('services');
+        if (servicesSection) {
+          servicesSection.scrollIntoView({ behavior: 'smooth' });
+          triggerHaptic();
+        }
+      }, 1200);
+    }
+  }, [chatMessages]);
+
   // --- HANDLERS ---
   const handleSend = () => {
     if (!inputValue.trim()) return;
@@ -102,8 +119,12 @@ const ChatWidget = () => {
 
   const handleQuickAction = (action) => {
     if (action === 'projects') {
-        setIsOpen(false); // Optional: close chat to see projects
+        setIsOpen(false);
         document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (action === 'services') {
+        setIsOpen(false);
+        document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
     }
     if (action === 'resume') {
         window.open(resumeFile, '_blank');
@@ -166,7 +187,6 @@ const ChatWidget = () => {
                     <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span></span>
                     AI Laksh
                   </div>
-                  {/* UPDATED HEADER TEXT */}
                   <p className="text-[10px] text-slate-400 font-medium ml-4 tracking-wider">Online and Ready - v2.0.4</p>
                 </div>
                 <div className="flex gap-2">
@@ -194,9 +214,9 @@ const ChatWidget = () => {
                           <p className="text-base font-medium text-white mb-2">System Ready</p>
                           <p className="text-xs text-slate-400 mb-8 max-w-[200px]">Ask anything about Laksh's tech stack, projects, or experience.</p>
                           
-                          {/* UPDATED ACTION CHIPS */}
                           <div className="flex flex-wrap justify-center gap-3">
                             <ActionChip icon={FiBriefcase} label="View Projects" onClick={() => handleQuickAction('projects')} />
+                            <ActionChip icon={FiPackage} label="Services" onClick={() => handleQuickAction('services')} /> {/* NEW Services Chip */}
                             <ActionChip icon={FiMail} label="Contacts" onClick={() => handleQuickAction('contact')} />
                             <ActionChip icon={FiFileText} label="Resume" onClick={() => handleQuickAction('resume')} />
                           </div>

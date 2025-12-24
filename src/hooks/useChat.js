@@ -54,6 +54,9 @@ export const useChat = () => {
     
     // Contact Triggers
     if (['contact', 'email', 'mail', 'hire', 'call', 'meet', 'reach'].some(k => lowerText.includes(k))) return 'contact';
+
+    // Services / Packages Triggers (NEW)
+    if (['service', 'package', 'price', 'pricing', 'cost', 'offer', 'sell', 'buy', 'money'].some(k => lowerText.includes(k))) return 'services';
     
     return null;
   };
@@ -64,7 +67,8 @@ export const useChat = () => {
     experience: "Here is a timeline of Laksh's professional journey and internships.",
     stack: "These are the weapons in Laksh's technical arsenal:",
     vibe: "Connecting to Spotify... Here's what keeps Laksh in the zone right now! 🎧",
-    contact: "I'd love to help you get in touch. Here is his contact card."
+    contact: "I'd love to help you get in touch. Here is his contact card.",
+    services: "Navigating you to the Services & Pricing section to explore the packages." // NEW
   };
 
   const sendMessage = async (messageText) => {

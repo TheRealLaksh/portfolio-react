@@ -4,14 +4,14 @@ import Layout from './components/layout/Layout';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-// Updated Imports with Numbered Prefixes
 import Hero from './components/sections/01-Hero';
 import About from './components/sections/02-About';
 import Experience from './components/sections/03-Experience';
 import Skills from './components/sections/04-Skills';
 import Projects from './components/sections/05-Projects';
 import Resume from './components/sections/06-Resume';
-import Services from './components/sections/07-Services'; // Import Services
+import Services from './components/sections/07-Services';
+import Booking from './components/sections/Booking';
 import Contact from './components/sections/08-Contact';
 
 function App() {
@@ -24,12 +24,11 @@ function App() {
     });
   }, []);
 
-  // Lenis Settings for "Butter Smooth" Feel
   const lenisOptions = {
-    lerp: 0.07,         // Lower = smoother/heavier (default 0.1)
-    duration: 1.2,      // Scroll duration
-    smoothTouch: false, // Keep native touch feel for better mobile UX, or set true for unified feel
-    touchMultiplier: 2, // Faster touch scrolling
+    lerp: 0.07,
+    duration: 1.2,
+    smoothTouch: false,
+    touchMultiplier: 2,
   };
 
   return (
@@ -41,7 +40,8 @@ function App() {
         <Skills />
         <Projects />
         <Resume />
-        <Services /> 
+        <Services />
+        <Booking />
         <Contact />
         <div className="h-[100px]" />
       </Layout>
