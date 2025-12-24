@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail, FiDownload, FiMessageSquare } from 'react-icons/fi';
+import { FiHome, FiUser, FiBriefcase, FiCpu, FiCode, FiFileText, FiMail, FiDownload, FiMessageSquare, FiPackage } from 'react-icons/fi';
 import useScrollSpy from '../../hooks/useScrollSpy';
 import { cn } from '../../utils/cn';
 import { triggerWarp } from '../../utils/triggerWarp';
@@ -11,7 +11,8 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   
-  const navIds = ['home', 'about', 'experience', 'skills', 'projects', 'resume', 'contact'];
+  // Added 'services' to the spy list
+  const navIds = ['home', 'about', 'experience', 'skills', 'projects', 'resume', 'services', 'contact'];
   const activeSection = useScrollSpy(navIds);
   const lenis = useLenis();
 
@@ -129,6 +130,12 @@ const Navbar = () => {
       <a href="#resume" onClick={(e) => scrollToSection(e, 'resume')} className={getLinkClass('resume')}>
         <FiFileText className="w-4 h-4 md:w-5 md:h-5" />
         <span className={getTextClass('resume')}>Resume</span>
+      </a>
+
+
+      <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className={getLinkClass('services')}>
+        <FiPackage className="w-4 h-4 md:w-5 md:h-5" />
+        <span className={getTextClass('services')}>Services</span>
       </a>
 
       <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className={getLinkClass('contact')}>

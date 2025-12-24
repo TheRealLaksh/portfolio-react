@@ -11,7 +11,8 @@ import Experience from './components/sections/03-Experience';
 import Skills from './components/sections/04-Skills';
 import Projects from './components/sections/05-Projects';
 import Resume from './components/sections/06-Resume';
-import Contact from './components/sections/07-Contact';
+import Services from './components/sections/07-Services'; // Import Services
+import Contact from './components/sections/08-Contact';
 
 function App() {
   useEffect(() => {
@@ -40,6 +41,7 @@ function App() {
         <Skills />
         <Projects />
         <Resume />
+        <Services /> 
         <Contact />
         <div className="h-[100px]" />
       </Layout>

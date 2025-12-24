@@ -109,7 +109,8 @@ const Footer = () => {
           <div className="hidden md:block">
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-3 text-sm text-slate-400">
-              {['Home', 'About', 'Skills', 'Experience', 'Projects', 'Resume', 'Contact'].map((link) => (
+
+              {['Home', 'About', 'Skills', 'Experience', 'Projects', 'Resume', 'Services', 'Contact'].map((link) => (
                 <li key={link}>
                   <a href={`#${link.toLowerCase()}`} className="hover:text-sky-400 transition-colors">
                     {link === 'Experience' ? 'Work' : link}
